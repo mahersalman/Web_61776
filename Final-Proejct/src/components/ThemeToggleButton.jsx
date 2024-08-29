@@ -5,9 +5,6 @@ import SunSVG from '../icon/Sun.svg';
 import MoonSVG from '../icon/Moon.svg';
 import { ThemeToggleButtonStyles } from '../styles/ThemeToggleButtonStyles'; // Import the styles
 
-/*
-componeent to toggle the dark and light mode using toggle button
- */
 const ThemeToggleButton = () => {
   // Function to handle the theme toggle
   const handleToggle = () => {
@@ -18,18 +15,27 @@ const ThemeToggleButton = () => {
     // Save the new theme to localStorage
     localStorage.setItem('theme', newTheme);
     // Toggle the 'dark' class on the body element based on the new theme
-    document.body.classList.toggle('dark', newTheme === 'dark');
+    if (newTheme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
   };
 
   // useEffect hook to apply the saved theme when the component mounts
   React.useEffect(() => {
     // Retrieve the saved theme from localStorage, defaulting to 'light' if not found
     const savedTheme = localStorage.getItem('theme') || 'light';
-    // If the saved theme is 'dark', add the 'dark' class to the body element
+    // Apply the saved theme on initial render
     if (savedTheme === 'dark') {
       document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
     }
   }, []); // Empty dependency array means this effect runs once on mount
+
+  // Determine if the theme is currently dark
+  const isDarkMode = localStorage.getItem('theme') === 'dark';
 
   return (
     <div className={ThemeToggleButtonStyles.container}>
@@ -37,7 +43,7 @@ const ThemeToggleButton = () => {
         className={ThemeToggleButtonStyles.input}
         type='checkbox'
         id='darkmode-toggle'
-        defaultChecked={localStorage.getItem('theme') === 'dark'}
+        checked={isDarkMode} // Ensure the checkbox reflects the current theme
         onChange={handleToggle} // Call handleToggle on change
       />
       <label
